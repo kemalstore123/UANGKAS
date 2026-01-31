@@ -2,36 +2,49 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Aplikasi Uang Kas</title>
+    <title>Aplikasi Uang Kas Tahunan</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f4f6f8;
+            background: #eef2f5;
             padding: 20px;
         }
-        h2 {
-            text-align: center;
-        }
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: auto;
             background: white;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .header img {
+            width: 80px;
+        }
+        h2 {
+            margin: 0;
+        }
+        label {
+            font-weight: bold;
         }
         input, select, button {
-            padding: 8px;
-            margin: 5px 0;
             width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
         }
         button {
-            background: #4CAF50;
+            background: #007bff;
             color: white;
             border: none;
             cursor: pointer;
         }
         button:hover {
-            background: #45a049;
+            background: #0056b3;
         }
         table {
             width: 100%;
@@ -44,13 +57,19 @@
             text-align: center;
         }
         th {
-            background: #eee;
+            background: #f0f0f0;
         }
-        .delete {
+        .total {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+        .hapus {
             background: red;
             color: white;
             border: none;
-            padding: 5px;
+            padding: 5px 10px;
             cursor: pointer;
         }
     </style>
@@ -58,17 +77,31 @@
 <body>
 
 <div class="container">
-    <h2>📒 Laporan Uang Kas Mingguan</h2>
+    <div class="header">
+        <img src="logo.png" alt="Logo Sekolah">
+        <div>
+            <h2>Laporan Uang Kas Sekolah</h2>
+            <p>Tahun Ajaran 1 Tahun</p>
+        </div>
+    </div>
 
-    <label>Nama</label>
+    <label>Nama Orang</label>
     <input type="text" id="nama">
 
-    <label>Minggu Ke-</label>
-    <select id="minggu">
-        <option value="1">Minggu 1</option>
-        <option value="2">Minggu 2</option>
-        <option value="3">Minggu 3</option>
-        <option value="4">Minggu 4</option>
+    <label>Bulan</label>
+    <select id="bulan">
+        <option>Januari</option>
+        <option>Februari</option>
+        <option>Maret</option>
+        <option>April</option>
+        <option>Mei</option>
+        <option>Juni</option>
+        <option>Juli</option>
+        <option>Agustus</option>
+        <option>September</option>
+        <option>Oktober</option>
+        <option>November</option>
+        <option>Desember</option>
     </select>
 
     <label>Uang Masuk</label>
@@ -84,7 +117,7 @@
             <tr>
                 <th>No</th>
                 <th>Nama</th>
-                <th>Minggu</th>
+                <th>Bulan</th>
                 <th>Masuk</th>
                 <th>Keluar</th>
                 <th>Saldo</th>
@@ -93,22 +126,30 @@
         </thead>
         <tbody id="tabelKas"></tbody>
     </table>
+
+    <div class="total">
+        Total Saldo 1 Tahun: Rp <span id="totalSaldo">0</span>
+    </div>
 </div>
 
 <script>
     let no = 1;
+    let totalSaldo = 0;
 
     function tambahData() {
         let nama = document.getElementById("nama").value;
-        let minggu = document.getElementById("minggu").value;
+        let bulan = document.getElementById("bulan").value;
         let masuk = parseInt(document.getElementById("masuk").value);
         let keluar = parseInt(document.getElementById("keluar").value);
         let saldo = masuk - keluar;
 
         if (nama === "") {
-            alert("Nama tidak boleh kosong!");
+            alert("Nama harus diisi!");
             return;
         }
+
+        totalSaldo += saldo;
+        document.getElementById("totalSaldo").innerText = totalSaldo;
 
         let tabel = document.getElementById("tabelKas");
         let row = tabel.insertRow();
@@ -116,11 +157,15 @@
         row.innerHTML = `
             <td>${no++}</td>
             <td>${nama}</td>
-            <td>Minggu ${minggu}</td>
+            <td>${bulan}</td>
             <td>Rp ${masuk}</td>
             <td>Rp ${keluar}</td>
             <td>Rp ${saldo}</td>
-            <td><button class="delete" onclick="hapusData(this)">Hapus</button></td>
+            <td>
+                <button class="hapus" onclick="hapusData(this, ${saldo})">
+                    Hapus
+                </button>
+            </td>
         `;
 
         document.getElementById("nama").value = "";
@@ -128,12 +173,13 @@
         document.getElementById("keluar").value = 0;
     }
 
-    function hapusData(btn) {
-        let row = btn.parentNode.parentNode;
-        row.parentNode.removeChild(row);
+    function hapusData(btn, saldo) {
+        totalSaldo -= saldo;
+        document.getElementById("totalSaldo").innerText = totalSaldo;
+        btn.parentNode.parentNode.remove();
     }
 </script>
 
 </body>
-        </html>
-        
+            </html>
+    
