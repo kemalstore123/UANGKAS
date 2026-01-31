@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Aplikasi Uang Kas Tahunan</title>
+    <title>Laporan Uang Kas Mingguan 1 Tahun</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -10,7 +10,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: auto;
             background: white;
             padding: 20px;
@@ -34,6 +34,150 @@
         input, select, button {
             width: 100%;
             padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .total {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+        .hapus {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="logo.png" alt="Logo Sekolah">
+        <div>
+            <h2>Laporan Uang Kas Mingguan</h2>
+            <p>Periode 1 Tahun (52 Minggu)</p>
+        </div>
+    </div>
+
+    <label>Nama Orang</label>
+    <input type="text" id="nama">
+
+    <label>Minggu Ke-</label>
+    <select id="minggu"></select>
+
+    <label>Uang Masuk</label>
+    <input type="number" id="masuk" value="0">
+
+    <label>Uang Keluar</label>
+    <input type="number" id="keluar" value="0">
+
+    <button onclick="tambahData()">Tambah Data</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Minggu</th>
+                <th>Masuk</th>
+                <th>Keluar</th>
+                <th>Saldo</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="tabelKas"></tbody>
+    </table>
+
+    <div class="total">
+        Total Saldo 1 Tahun: Rp <span id="totalSaldo">0</span>
+    </div>
+</div>
+
+<script>
+    // Buat pilihan minggu 1–52
+    let mingguSelect = document.getElementById("minggu");
+    for (let i = 1; i <= 52; i++) {
+        let option = document.createElement("option");
+        option.value = "Minggu " + i;
+        option.text = "Minggu " + i;
+        mingguSelect.appendChild(option);
+    }
+
+    let no = 1;
+    let totalSaldo = 0;
+
+    function tambahData() {
+        let nama = document.getElementById("nama").value;
+        let minggu = document.getElementById("minggu").value;
+        let masuk = parseInt(document.getElementById("masuk").value);
+        let keluar = parseInt(document.getElementById("keluar").value);
+        let saldo = masuk - keluar;
+
+        if (nama === "") {
+            alert("Nama harus diisi!");
+            return;
+        }
+
+        totalSaldo += saldo;
+        document.getElementById("totalSaldo").innerText = totalSaldo;
+
+        let tabel = document.getElementById("tabelKas");
+        let row = tabel.insertRow();
+
+        row.innerHTML = `
+            <td>${no++}</td>
+            <td>${nama}</td>
+            <td>${minggu}</td>
+            <td>Rp ${masuk}</td>
+            <td>Rp ${keluar}</td>
+            <td>Rp ${saldo}</td>
+            <td>
+                <button class="hapus" onclick="hapusData(this, ${saldo})">
+                    Hapus
+                </button>
+            </td>
+        `;
+
+        document.getElementById("nama").value = "";
+        document.getElementById("masuk").value = 0;
+        document.getElementById("keluar").value = 0;
+    }
+
+    function hapusData(btn, saldo) {
+        totalSaldo -= saldo;
+        document.getElementById("totalSaldo").innerText = totalSaldo;
+        btn.parentNode.parentNode.remove();
+    }
+</script>
+
+</body>
+</html>
             margin-top: 5px;
             margin-bottom: 10px;
         }
@@ -183,3 +327,4 @@
 </body>
             </html>
     
+
