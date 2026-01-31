@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Laporan Uang Kas Mingguan 1 Tahun</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,9 +25,6 @@
         }
         .header img {
             width: 80px;
-        }
-        h2 {
-            margin: 0;
         }
         label {
             font-weight: bold;
@@ -74,6 +72,7 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -120,26 +119,22 @@
 </div>
 
 <script>
-    // Buat pilihan minggu 1–52
-    let mingguSelect = document.getElementById("minggu");
+    const mingguSelect = document.getElementById("minggu");
     for (let i = 1; i <= 52; i++) {
-        let option = document.createElement("option");
-        option.value = "Minggu " + i;
-        option.text = "Minggu " + i;
-        mingguSelect.appendChild(option);
+        mingguSelect.innerHTML += `<option>Minggu ${i}</option>`;
     }
 
     let no = 1;
     let totalSaldo = 0;
 
     function tambahData() {
-        let nama = document.getElementById("nama").value;
-        let minggu = document.getElementById("minggu").value;
-        let masuk = parseInt(document.getElementById("masuk").value);
-        let keluar = parseInt(document.getElementById("keluar").value);
-        let saldo = masuk - keluar;
+        const nama = document.getElementById("nama").value;
+        const minggu = document.getElementById("minggu").value;
+        const masuk = Number(document.getElementById("masuk").value);
+        const keluar = Number(document.getElementById("keluar").value);
+        const saldo = masuk - keluar;
 
-        if (nama === "") {
+        if (!nama) {
             alert("Nama harus diisi!");
             return;
         }
@@ -147,184 +142,27 @@
         totalSaldo += saldo;
         document.getElementById("totalSaldo").innerText = totalSaldo;
 
-        let tabel = document.getElementById("tabelKas");
-        let row = tabel.insertRow();
-
-        row.innerHTML = `
-            <td>${no++}</td>
-            <td>${nama}</td>
-            <td>${minggu}</td>
-            <td>Rp ${masuk}</td>
-            <td>Rp ${keluar}</td>
-            <td>Rp ${saldo}</td>
-            <td>
-                <button class="hapus" onclick="hapusData(this, ${saldo})">
-                    Hapus
-                </button>
-            </td>
+        document.getElementById("tabelKas").innerHTML += `
+            <tr>
+                <td>${no++}</td>
+                <td>${nama}</td>
+                <td>${minggu}</td>
+                <td>Rp ${masuk}</td>
+                <td>Rp ${keluar}</td>
+                <td>Rp ${saldo}</td>
+                <td>
+                    <button class="hapus" onclick="this.closest('tr').remove(); totalSaldo -= ${saldo}; document.getElementById('totalSaldo').innerText = totalSaldo;">
+                        Hapus
+                    </button>
+                </td>
+            </tr>
         `;
 
         document.getElementById("nama").value = "";
         document.getElementById("masuk").value = 0;
         document.getElementById("keluar").value = 0;
-    }
-
-    function hapusData(btn, saldo) {
-        totalSaldo -= saldo;
-        document.getElementById("totalSaldo").innerText = totalSaldo;
-        btn.parentNode.parentNode.remove();
     }
 </script>
 
 </body>
 </html>
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background: #f0f0f0;
-        }
-        .total {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: right;
-        }
-        .hapus {
-            background: red;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="header">
-        <img src="logo.png" alt="Logo Sekolah">
-        <div>
-            <h2>Laporan Uang Kas Sekolah</h2>
-            <p>Tahun Ajaran 1 Tahun</p>
-        </div>
-    </div>
-
-    <label>Nama Orang</label>
-    <input type="text" id="nama">
-
-    <label>Bulan</label>
-    <select id="bulan">
-        <option>Januari</option>
-        <option>Februari</option>
-        <option>Maret</option>
-        <option>April</option>
-        <option>Mei</option>
-        <option>Juni</option>
-        <option>Juli</option>
-        <option>Agustus</option>
-        <option>September</option>
-        <option>Oktober</option>
-        <option>November</option>
-        <option>Desember</option>
-    </select>
-
-    <label>Uang Masuk</label>
-    <input type="number" id="masuk" value="0">
-
-    <label>Uang Keluar</label>
-    <input type="number" id="keluar" value="0">
-
-    <button onclick="tambahData()">Tambah Data</button>
-
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Bulan</th>
-                <th>Masuk</th>
-                <th>Keluar</th>
-                <th>Saldo</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody id="tabelKas"></tbody>
-    </table>
-
-    <div class="total">
-        Total Saldo 1 Tahun: Rp <span id="totalSaldo">0</span>
-    </div>
-</div>
-
-<script>
-    let no = 1;
-    let totalSaldo = 0;
-
-    function tambahData() {
-        let nama = document.getElementById("nama").value;
-        let bulan = document.getElementById("bulan").value;
-        let masuk = parseInt(document.getElementById("masuk").value);
-        let keluar = parseInt(document.getElementById("keluar").value);
-        let saldo = masuk - keluar;
-
-        if (nama === "") {
-            alert("Nama harus diisi!");
-            return;
-        }
-
-        totalSaldo += saldo;
-        document.getElementById("totalSaldo").innerText = totalSaldo;
-
-        let tabel = document.getElementById("tabelKas");
-        let row = tabel.insertRow();
-
-        row.innerHTML = `
-            <td>${no++}</td>
-            <td>${nama}</td>
-            <td>${bulan}</td>
-            <td>Rp ${masuk}</td>
-            <td>Rp ${keluar}</td>
-            <td>Rp ${saldo}</td>
-            <td>
-                <button class="hapus" onclick="hapusData(this, ${saldo})">
-                    Hapus
-                </button>
-            </td>
-        `;
-
-        document.getElementById("nama").value = "";
-        document.getElementById("masuk").value = 0;
-        document.getElementById("keluar").value = 0;
-    }
-
-    function hapusData(btn, saldo) {
-        totalSaldo -= saldo;
-        document.getElementById("totalSaldo").innerText = totalSaldo;
-        btn.parentNode.parentNode.remove();
-    }
-</script>
-
-</body>
-            </html>
-    
-
