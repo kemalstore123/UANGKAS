@@ -118,18 +118,25 @@
     </div>
 </div>
 
-<script>
+ <script>
     const mingguSelect = document.getElementById("minggu");
+    const tabelKas = document.getElementById("tabelKas");
+    const totalSaldoEl = document.getElementById("totalSaldo");
+
+    // Buat minggu 1–52
     for (let i = 1; i <= 52; i++) {
         mingguSelect.innerHTML += `<option>Minggu ${i}</option>`;
     }
 
-    let no = 1;
-    let totalSaldo = 0;
+    let dataKas = JSON.parse(localStorage.getItem("dataKas")) || [];
+    let totalSaldo = JSON.parse(localStorage.getItem("totalSaldo")) || 0;
+
+    // Tampilkan data saat halaman dibuka
+    tampilkanData();
 
     function tambahData() {
         const nama = document.getElementById("nama").value;
-        const minggu = document.getElementById("minggu").value;
+        const minggu = mingguSelect.value;
         const masuk = Number(document.getElementById("masuk").value);
         const keluar = Number(document.getElementById("keluar").value);
         const saldo = masuk - keluar;
@@ -139,30 +146,58 @@
             return;
         }
 
+        dataKas.push({ nama, minggu, masuk, keluar, saldo });
         totalSaldo += saldo;
-        document.getElementById("totalSaldo").innerText = totalSaldo;
 
-        document.getElementById("tabelKas").innerHTML += `
-            <tr>
-                <td>${no++}</td>
-                <td>${nama}</td>
-                <td>${minggu}</td>
-                <td>Rp ${masuk}</td>
-                <td>Rp ${keluar}</td>
-                <td>Rp ${saldo}</td>
-                <td>
-                    <button class="hapus" onclick="this.closest('tr').remove(); totalSaldo -= ${saldo}; document.getElementById('totalSaldo').innerText = totalSaldo;">
-                        Hapus
-                    </button>
-                </td>
-            </tr>
-        `;
+        tampilkanData();
+        simpanKeStorage();
 
         document.getElementById("nama").value = "";
         document.getElementById("masuk").value = 0;
         document.getElementById("keluar").value = 0;
     }
-</script>
 
-</body>
-</html>
+    function tampilkanData() {
+        tabelKas.innerHTML = "";
+        let no = 1;
+
+        dataKas.forEach((item, index) => {
+            tabelKas.innerHTML += `
+                <tr>
+                    <td>${no++}</td>
+                    <td>${item.nama}</td>
+                    <td>${item.minggu}</td>
+                    <td>Rp ${item.masuk}</td>
+                    <td>Rp ${item.keluar}</td>
+                    <td>Rp ${item.saldo}</td>
+                    <td>
+                        <button class="hapus" onclick="hapusData(${index})">
+                            Hapus
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        totalSaldoEl.innerText = totalSaldo;
+    }
+
+    function hapusData(index) {
+        totalSaldo -= dataKas[index].saldo;
+        dataKas.splice(index, 1);
+        tampilkanData();
+        simpanKeStorage();
+    }
+
+    function simpanKeStorage() {
+        localStorage.setItem("dataKas", JSON.stringify(dataKas));
+        localStorage.setItem("totalSaldo", JSON.stringify(totalSaldo));
+    }
+
+    function simpanData() {
+        simpanKeStorage();
+        alert("✅ Data berhasil disimpan!");
+    }
+</script>
+    
+
